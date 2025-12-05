@@ -1,0 +1,13 @@
+{
+  "name": "ghost-import-routes",
+  "version": "1.0.0",
+  "private": true,
+  "main": "import-routes.js",
+  "dependencies": {
+    "@tryghost/admin-api": "^1.2.0",
+    "js-yaml": "^4.1.0"
+  },
+  "scripts": {
+    "import": "node import-routes.js"
+  }
+}

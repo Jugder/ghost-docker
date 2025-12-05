@@ -2,8 +2,11 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/main/schema/compose-spec.json
 services:
   caddy:
-    image: caddy:2.10.2-alpine@sha256:953131cfea8e12bfe1c631a36308e9660e4389f0c3dfb3be957044d3ac92d446
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
     restart: always
+    # Expose Caddy on alternate host ports to avoid conflicts (host:container)
     ports:
       - "80:80"
       - "443:443"
@@ -11,6 +14,7 @@ services:
       DOMAIN: ${DOMAIN:?DOMAIN environment variable is required}
       ADMIN_DOMAIN: ${ADMIN_DOMAIN:-}
       ACTIVITYPUB_TARGET: ${ACTIVITYPUB_TARGET:-https://ap.ghost.org}
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN:-}
     volumes:
       - ./caddy:/etc/caddy
       - caddy_data:/data
