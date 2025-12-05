@@ -21,6 +21,10 @@
 		}
 	}
 
+	# Redirect /tag/* to /* (because Ghost routing now uses /{slug}/ for tags)
+	@tagpath path_regexp /tag/(.*)
+	redir @tagpath /{re.tagpath.1} 301
+
 	# Default proxy everything else to Ghost
 	handle {
 		reverse_proxy ghost:2368
@@ -48,8 +52,8 @@
  	# Traffic Analytics service
  	import snippets/TrafficAnalytics
 
- 	# ActivityPub Service
- 	import snippets/ActivityPub
+ 	# ActivityPub Service is NOT imported here - only on the main domain
+ 	# The admin domain fetches ActivityPub data from the main domain via CORS
 
 	# Ensure JWKS is reachable on the admin domain as well
 	handle /ghost/.well-known/jwks.json {

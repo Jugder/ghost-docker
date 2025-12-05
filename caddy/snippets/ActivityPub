@@ -2,12 +2,33 @@
 # Proxy activitypub requests /.ghost/activitypub/
 handle /.ghost/activitypub/* {
 	reverse_proxy {$ACTIVITYPUB_TARGET}
+
+	# allow admin domain to access ActivityPub resources via CORS
+	# Use > to replace (not append) headers to avoid duplicates
+	header >Access-Control-Allow-Origin https://{env.ADMIN_DOMAIN}
+	header >Access-Control-Allow-Headers "Authorization, Content-Type, Accept, X-Requested-With"
+	header >Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+	header >Access-Control-Allow-Credentials "true"
+
+	# Handle CORS preflight requests
+	@options method OPTIONS
+	respond @options 204
 }
 
 handle /.well-known/webfinger {
 	reverse_proxy {$ACTIVITYPUB_TARGET}
+
+	header >Access-Control-Allow-Origin https://{env.ADMIN_DOMAIN}
+	header >Access-Control-Allow-Headers "Authorization, Content-Type, Accept, X-Requested-With"
+	header >Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+	header >Access-Control-Allow-Credentials "true"
 }
 
 handle /.well-known/nodeinfo {
 	reverse_proxy {$ACTIVITYPUB_TARGET}
+
+	header >Access-Control-Allow-Origin https://{env.ADMIN_DOMAIN}
+	header >Access-Control-Allow-Headers "Authorization, Content-Type, Accept, X-Requested-With"
+	header >Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+	header >Access-Control-Allow-Credentials "true"
 }
